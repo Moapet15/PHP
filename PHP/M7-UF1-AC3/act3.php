@@ -23,15 +23,13 @@
 			$nombre = isset ($_POST['nombre']);
 			$direccion = isset ($_POST['direccion']);
 				validacio($nif,$nombre,$direccion);
-
-			} catch (Exception $e) {
-				
-			}
-			
 			if (array_key_exists($nif, $listaDePersonas)) {
 				throw new Exception('La persona ja existeix', 4);
 			}
-			registrar($nif,$nombre,$direccion,$listaDePersonas);
+			} catch (Exception $e) {
+				$mensaje = $e -> getMessage();
+			}
+			registrar($nif,$nombre,$direccion);
 		}
 
 		//validar que el nif no exista en la base de datos
@@ -142,16 +140,16 @@ function validacio($nif,$nombre,$direccion){
 	    // echo($nif);
 	    // echo($nombre);
 	    // echo($direccion);
-	    if (empty($nif)) {
-	        throw new Exception("El camp NIF no pot ser nul.", 1);
-	    }
-	    if (empty($nombre)) {
-	        throw new Exception("El camp Nom no pot ser nul.", 2);
-	    }
-	    if (empty($direccion)) {
-	        throw new Exception("El camp Direcció no pot ser nul.", 3);
-	    }
-		} 
+		    if (empty($nif)) {
+		        throw new Exception("El camp NIF no pot ser nul.", 1);
+		    }
+		    if (empty($nombre)) {
+		        throw new Exception("El camp Nom no pot ser nul.", 2);
+		    }
+		    if (empty($direccion)) {
+		        throw new Exception("El camp Direcció no pot ser nul.", 3);
+		    }
+		}
 		catch (Exception $e) {
 			throw new Exception( $e->getMessage() );
 		}
@@ -164,12 +162,26 @@ function buidarLlista(){
 
 
 function modificarInfo(){
-
+	
 }
 
-
 function eliminarPersona($nif){
-
+	$nif = trim($_POST['nif']);
+	try {
+		if (empty($nif)) {
+			throw new Exception("Necessito un nif per esborrar", 5);
+		}
+	}
+	catch (Exception $e) {
+		throw new Exception( $e->getMessage() );
+	}
+	foreach ($listaDePersonas as $persona => $nif) {
+		if ($listaDePersonas['nif'] == $nif) {
+			$listaDePersonas['persona'] = empty;
+			$listaDePersonas['persona']['nombre'] = empty;
+			$listaDePersonas['persona']['direccion'] = empty;
+		}
+	}
 }
 
 ?>
